@@ -1,55 +1,41 @@
-📊 DP4 Voter Data Sampling – KPU Web Scraping & Stratified Sampling
+# 📊 Sampling Data Pemilih DP4 – Web Scraping & Stratified Random Sampling
 
-🧠 Project Idea
+## 🧠 Ringkasan Proyek
 
-Dalam rangka memahami distribusi data pemilih di Indonesia, proyek ini bertujuan untuk melakukan web scraping terhadap data Daftar Penduduk Potensial Pemilih Pemilu (DP4) dari situs resmi KPU: https://satupetadata.kpu.go.id/data_pemilih. Data ini mencakup jumlah pemilih berdasarkan provinsi dan jenis kelamin.
+Proyek ini melakukan scraping data **Daftar Penduduk Potensial Pemilih Pemilu (DP4)** dari situs resmi **KPU**, mencakup jumlah pemilih per **provinsi dan jenis kelamin**. Tujuannya adalah menyimulasikan proses sampling survei nasional menggunakan pendekatan **stratified random sampling**.
 
-🎯 Tujuan
+## 🎯 Tujuan
 
-Mengambil data total pemilih per provinsi beserta proporsi gender-nya (Laki-laki dan Perempuan).
-Menghitung jumlah sampel menggunakan rumus Slovin.
-Menerapkan stratified random sampling berdasarkan provinsi dan gender.
-Melakukan eksperimen oversampling pada 7 provinsi dengan jumlah sampel kecil (dikalikan faktor 2).
-Menghitung pembobotan (weighting) pasca-oversampling agar hasil tetap representatif secara nasional.
-🛠️ Langkah-langkah
+- Scraping data pemilih berdasarkan provinsi dan gender  
+- Menghitung **ukuran sampel** dengan **rumus Slovin** (Margin of Error: 3%)  
+- Menerapkan **stratified sampling** berdasarkan provinsi & gender  
+- Melakukan **oversampling** (×2) pada 7 provinsi dengan sampel kecil  
+- Menghitung **pembobotan** agar hasil tetap representatif  
 
-Scraping
-Mengambil data DP4 dari halaman web KPU dan mengolahnya menjadi DataFrame yang mencakup kolom:
-Provinsi
-Pemilih_Laki_Laki
-Pemilih_Perempuan
-Total_Pemilih
-Perhitungan Sampel – Slovin's Formula
-n
-=
-N
-1
-+
-N
-⋅
-e
-2
-n= 
-1+N⋅e 
-2
- 
-N
-​	
- 
-Dengan e = 0.05 (margin of error), dihitung jumlah sampel total nasional.
-Stratified Sampling
-Distribusi sampel dilakukan secara proporsional berdasarkan propinsi dan gender untuk memastikan representasi yang adil.
-Oversampling (Eksperimen)
-Untuk 7 provinsi dengan sampel terlalu kecil (< threshold tertentu), dilakukan penggandaan ukuran sampel (faktor 2).
-Pembobotan (Weighting)
-Karena oversampling mengubah proporsi populasi asli, bobot dihitung ulang:
-Weight
-=
-Proporsi Populasi Asli
-Proporsi Sampel
-Weight= 
-Proporsi Sampel
-Proporsi Populasi Asli
-​	
- 
-Bobot ini nantinya digunakan untuk analisis agar tetap merefleksikan populasi secara akurat.
+## 🛠️ Langkah-langkah
+
+1. **Web Scraping**  
+   Mengambil data dari [website KPU](https://satupetadata.kpu.go.id/data_pemilih) menggunakan `BeautifulSoup`. Data terdiri dari:  
+   - Nama Provinsi  
+   - Jumlah Laki-laki  
+   - Jumlah Perempuan  
+   - Jumlah Total  
+
+2. **Perhitungan Ukuran Sampel**  
+   Menggunakan rumus Slovin:  
+   ```math
+   n = \frac{N}{1 + N \cdot e^2}
+   ```
+   Di mana `N` adalah total populasi dan `e = 0.03`.
+
+3. **Stratified Sampling**  
+   Sampel dibagi secara proporsional berdasarkan provinsi dan gender. Pemilihan dilakukan secara acak dengan `numpy`.
+
+4. **Oversampling (Eksperimen)**  
+   Provinsi dengan sampel terkecil dikalikan dua (×2) untuk mengurangi under-representation.
+
+5. **Pembobotan**  
+   Menghitung bobot untuk mengembalikan proporsi populasi asli:  
+   ```math
+   \text{Bobot} = \frac{\text{Proporsi Populasi Nyata}}{\text{Proporsi Sampel}}
+   ```
